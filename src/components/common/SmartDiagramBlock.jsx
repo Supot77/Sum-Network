@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowRight, ArrowDown, Terminal, Check, Copy, Layers, ShieldCheck, Zap, Table } from 'lucide-react';
+import { Terminal, Check, Copy, Layers } from 'lucide-react';
+import BespokeDiagrams from './BespokeDiagrams';
 
 export default function SmartDiagramBlock({ rawContent }) {
   const [copied, setCopied] = React.useState(false);
@@ -11,90 +12,15 @@ export default function SmartDiagramBlock({ rawContent }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // 1. Check if there is a bespoke tailored visualizer for this specific diagram
+  const bespokeElement = BespokeDiagrams({ blockText: text });
+  if (bespokeElement !== null && bespokeElement !== undefined) {
+    return bespokeElement;
+  }
+
   const lines = text.split('\n');
 
-  // 1. SPECIFIC FLOW: Information Transfer Process (Chapter 1)
-  if (text.includes('Information') && text.includes('Transmission Medium') && text.includes('--->')) {
-    const steps = [
-      { num: 1, title: 'ข้อมูลข่าวสาร', en: 'Information', note: 'เสียง, ภาพ, ข้อความ, วิดีโอ' },
-      { num: 2, title: 'ข้อมูลดิจิทัล', en: 'Data', note: 'เลขฐานสอง 0 และ 1 (บิต)' },
-      { num: 3, title: 'สัญญาณสื่อสาร', en: 'Signal', note: 'คลื่นไฟฟ้า / แสง / คลื่นวิทยุ' },
-      { num: 4, title: 'ตัวกลางการสื่อสาร', en: 'Transmission Medium', note: 'สายทองแดง / ใยแก้ว / อากาศ' },
-    ];
-
-    return (
-      <div className="my-6 p-5 sm:p-6 rounded-2xl bg-[#EAE3D5]/60 dark:bg-zinc-900/60 border border-[#DDD3C1] dark:border-zinc-800 font-sans shadow-sm">
-        <div className="flex items-center gap-2 mb-4 text-xs font-mono font-bold text-[#8E7E6A] dark:text-zinc-400 uppercase">
-          <Zap className="w-4 h-4 text-amber-700 dark:text-amber-400" />
-          <span>วงจรการแปลงสารสนเทศสู่สัญญาณสื่อสาร (Information Transfer Process)</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {steps.map((s, idx) => (
-            <div key={idx} className="p-4 rounded-xl bg-[#FAF7F2] dark:bg-zinc-950 border border-[#DDD3C1] dark:border-zinc-800 flex flex-col justify-between shadow-sm hover:border-[#8E7E6A] transition-colors">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="w-5 h-5 rounded-full bg-[#231D16] text-[#FAF7F2] dark:bg-zinc-100 dark:text-zinc-950 text-[10px] font-mono font-bold flex items-center justify-center">
-                    {s.num}
-                  </span>
-                  <span className="text-[10px] font-mono text-[#8E7E6A] dark:text-zinc-500 font-semibold">
-                    Step {s.num}
-                  </span>
-                </div>
-                <div className="font-bold text-sm text-[#16120D] dark:text-zinc-100">{s.title}</div>
-                <div className="text-xs font-mono text-[#6B5C4B] dark:text-zinc-400">({s.en})</div>
-              </div>
-              <div className="text-[11px] text-[#8E7E6A] dark:text-zinc-400 mt-3 pt-2 border-t border-[#DDD3C1]/50 dark:border-zinc-800 bg-[#F4EFE6] dark:bg-zinc-900/60 p-2 rounded-lg">
-                💡 {s.note}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // 2. SPECIFIC FLOW: Device Boot / Initialization Process (Chapter 3)
-  if (text.includes('Hardware Power-On') && text.includes('BootROM') && text.includes('Load VRP')) {
-    const bootSteps = [
-      { step: 1, title: 'Hardware Power-On & POST', desc: 'จ่ายไฟและตรวจสอบความสมบูรณ์ของฮาร์ดแวร์ (CPU, SDRAM)' },
-      { step: 2, title: 'Run BootROM Software', desc: 'รันโปรแกรม BootLoader เตรียมพร้อมระบบและโหลด OS' },
-      { step: 3, title: 'Load VRP System Software', desc: 'ค้นหาและโหลดไฟล์ระบบ .cc จาก Flash เข้าสู่ SDRAM' },
-      { step: 4, title: 'Load Configuration File', desc: 'โหลดไฟล์ startup saved-configuration มาเป็น Current Configuration' },
-    ];
-
-    return (
-      <div className="my-6 p-5 sm:p-6 rounded-2xl bg-[#EAE3D5]/60 dark:bg-zinc-900/60 border border-[#DDD3C1] dark:border-zinc-800 font-sans shadow-sm">
-        <div className="flex items-center gap-2 mb-4 text-xs font-mono font-bold text-[#8E7E6A] dark:text-zinc-400 uppercase">
-          <Zap className="w-4 h-4 text-amber-700 dark:text-amber-400" />
-          <span>กระบวนการเริ่มต้นระบบของอุปกรณ์ (Device Initialization Process)</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {bootSteps.map((b, idx) => (
-            <div key={idx} className="p-4 rounded-xl bg-[#FAF7F2] dark:bg-zinc-950 border border-[#DDD3C1] dark:border-zinc-800 flex flex-col justify-between shadow-sm">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="w-5 h-5 rounded-full bg-[#231D16] text-[#FAF7F2] dark:bg-zinc-100 dark:text-zinc-950 text-[10px] font-mono font-bold flex items-center justify-center">
-                    {b.step}
-                  </span>
-                  <span className="text-[10px] font-mono text-[#8E7E6A] dark:text-zinc-500 font-semibold">
-                    Step {b.step}
-                  </span>
-                </div>
-                <div className="font-bold text-xs sm:text-sm text-[#16120D] dark:text-zinc-100">{b.title}</div>
-              </div>
-              <div className="text-[11px] text-[#8E7E6A] dark:text-zinc-400 mt-2.5 pt-2 border-t border-[#DDD3C1]/50 dark:border-zinc-800">
-                {b.desc}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // 3. ASCII TABLE DETECTION: Multi-row table with pipes | ... |
+  // 2. ASCII TABLE DETECTION: Multi-row table with pipes | ... | and +---
   const pipeLines = lines.filter(l => l.trim().startsWith('|') && l.trim().endsWith('|'));
   if (pipeLines.length >= 2 && text.includes('+---')) {
     const tableRows = [];
@@ -141,7 +67,7 @@ export default function SmartDiagramBlock({ rawContent }) {
     }
   }
 
-  // 4. CLI TERMINAL SESSION (Raw terminal commands without ASCII table borders)
+  // 3. CLI TERMINAL SESSION (Raw terminal commands without ASCII table borders)
   const isPureCli = !text.includes('+---') && (
     text.startsWith('<Huawei>') || text.startsWith('[Huawei]') || 
     text.startsWith('<Switch>') || text.startsWith('[Switch]') ||
@@ -178,7 +104,7 @@ export default function SmartDiagramBlock({ rawContent }) {
     );
   }
 
-  // 5. TECHNICAL BLUEPRINT (Topologies, packet bit diagrams, ASCII schematics)
+  // 4. TECHNICAL BLUEPRINT (Fallback)
   return (
     <div className="my-6 rounded-2xl overflow-hidden border border-[#DDD3C1] dark:border-zinc-800 bg-[#EAE3D5]/80 dark:bg-zinc-950 shadow-sm font-mono text-xs">
       <div className="flex items-center justify-between px-4 py-2.5 bg-[#EAE3D5] dark:bg-zinc-900 border-b border-[#DDD3C1] dark:border-zinc-800 text-[#8E7E6A] dark:text-zinc-400">
