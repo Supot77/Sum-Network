@@ -3,7 +3,7 @@ import {
   ArrowRight, ArrowDown, Server, Laptop, Shield, Zap, 
   Network, Layers, Cpu, Database, HardDrive, Radio, Check, 
   Activity, GitCommit, Split, ToggleLeft, Disc, AlertTriangle,
-  Globe, Share2, FolderTree, Key, RefreshCw
+  Globe, Share2, FolderTree, Key, RefreshCw, Terminal
 } from 'lucide-react';
 
 export default function BespokeDiagrams({ blockText }) {
