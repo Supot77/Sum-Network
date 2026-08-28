@@ -1,9 +1,9 @@
 import React from 'react';
+import SmartDiagramBlock from './SmartDiagramBlock';
 
 function renderInline(text) {
   if (!text) return null;
 
-  // Split by inline code: `code`
   const codeParts = text.split(/(`[^`]+`)/g);
   
   return codeParts.map((part, i) => {
@@ -15,7 +15,6 @@ function renderInline(text) {
       );
     }
 
-    // Split by bold: **bold**
     const boldParts = part.split(/(\*\*[^*]+\*\*)/g);
     return boldParts.map((bPart, j) => {
       if (bPart.startsWith('**') && bPart.endsWith('**')) {
@@ -26,7 +25,6 @@ function renderInline(text) {
         );
       }
       
-      // Split by italic: *italic*
       const italicParts = bPart.split(/(\*[^*]+\*)/g);
       return italicParts.map((itPart, k) => {
         if (itPart.startsWith('*') && itPart.endsWith('*')) {
@@ -53,7 +51,7 @@ export default function MarkdownRenderer({ content }) {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // 1. Fenced Code Block / ASCII Box
+    // 1. Fenced Code Block / ASCII Diagram -> SmartDiagramBlock
     if (trimmed.startsWith('```')) {
       const codeLines = [];
       i++;
@@ -62,11 +60,7 @@ export default function MarkdownRenderer({ content }) {
         i++;
       }
       elements.push(
-        <div key={`code-${elements.length}`} className="my-5 rounded-xl overflow-hidden border border-[#DDD3C1] dark:border-zinc-800 bg-[#EAE3D5]/80 dark:bg-zinc-950 shadow-sm">
-          <pre className="p-4 font-mono text-xs sm:text-sm text-[#231D16] dark:text-zinc-200 overflow-x-auto leading-relaxed whitespace-pre select-all">
-            <code>{codeLines.join('\n')}</code>
-          </pre>
-        </div>
+        <SmartDiagramBlock key={`diag-${elements.length}`} rawContent={codeLines.join('\n')} />
       );
       i++;
       continue;
