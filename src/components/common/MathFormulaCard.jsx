@@ -1,0 +1,52 @@
+import React from 'react';
+import katex from 'katex';
+import { Calculator } from 'lucide-react';
+
+export default function MathFormulaCard({ formula, title, description, variables = [] }) {
+  let html = '';
+  try {
+    html = katex.renderToString(formula, {
+      displayMode: true,
+      throwOnError: false,
+    });
+  } catch (e) {
+    html = formula;
+  }
+
+  return (
+    <div className="my-5 rounded-2xl overflow-hidden border border-[#DDD3C1] dark:border-zinc-800 bg-[#FAF7F2] dark:bg-zinc-950 font-sans shadow-sm">
+      <div className="px-4 py-2.5 bg-[#EAE3D5] dark:bg-zinc-900 border-b border-[#DDD3C1] dark:border-zinc-800 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Calculator className="w-4 h-4 text-amber-800 dark:text-amber-400" />
+          <span className="font-bold text-xs sm:text-sm text-[#16120D] dark:text-zinc-100">
+            {title || 'สูตรคำนวณเครือข่าย (Network Mathematical Formula)'}
+          </span>
+        </div>
+        <span className="text-[10px] font-mono text-[#8E7E6A] dark:text-zinc-400 uppercase font-semibold">KaTeX Math</span>
+      </div>
+
+      <div className="p-4 sm:p-5 flex flex-col items-center justify-center bg-[#FAF7F2] dark:bg-zinc-950/80">
+        <div 
+          className="text-base sm:text-lg text-[#16120D] dark:text-zinc-100 overflow-x-auto py-2 max-w-full"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+        {description && (
+          <p className="text-xs text-[#6B5C4B] dark:text-zinc-400 mt-2 text-center">
+            {description}
+          </p>
+        )}
+      </div>
+
+      {variables && variables.length > 0 && (
+        <div className="px-4 py-2.5 bg-[#F4EFE6] dark:bg-zinc-900/60 border-t border-[#DDD3C1]/60 dark:border-zinc-800 flex flex-wrap gap-3 text-xs text-[#4F4335] dark:text-zinc-300">
+          {variables.map((v, i) => (
+            <div key={i} className="flex items-center gap-1.5 font-mono text-[11px]">
+              <span className="font-bold text-amber-900 dark:text-amber-300 bg-[#EAE3D5] dark:bg-zinc-800 px-1.5 py-0.5 rounded">{v.symbol}</span>
+              <span className="text-[#6B5C4B] dark:text-zinc-400 font-sans">{v.meaning}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

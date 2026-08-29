@@ -1,40 +1,70 @@
 import React from 'react';
+import katex from 'katex';
 import SmartDiagramBlock from './SmartDiagramBlock';
+import MathFormulaCard from './MathFormulaCard';
+
+function renderMathInline(latex) {
+  try {
+    return (
+      <span 
+        className="inline-katex mx-1 font-mono text-[13px] text-[#16120D] dark:text-zinc-100"
+        dangerouslySetInnerHTML={{
+          __html: katex.renderToString(latex, { displayMode: false, throwOnError: false })
+        }}
+      />
+    );
+  } catch (e) {
+    return <code className="px-1 py-0.5 rounded bg-[#EAE3D5] text-xs font-mono">{latex}</code>;
+  }
+}
 
 function renderInline(text) {
   if (!text) return null;
 
-  const codeParts = text.split(/(`[^`]+`)/g);
-  
-  return codeParts.map((part, i) => {
-    if (part.startsWith('`') && part.endsWith('`')) {
-      return (
-        <code key={i} className="px-1.5 py-0.5 mx-0.5 rounded bg-[#EAE3D5] dark:bg-zinc-800 border border-[#DDD3C1] dark:border-zinc-700 text-[#231D16] dark:text-zinc-200 font-mono text-xs font-semibold">
-          {part.slice(1, -1)}
-        </code>
-      );
+  // 1. Split by inline math $...$
+  const mathParts = text.split(/(\$(?:[^$]|\\\$)+\$)/g);
+
+  return mathParts.map((mPart, mIdx) => {
+    if (mPart.startsWith('$') && mPart.endsWith('$') && mPart.length > 2) {
+      const latex = mPart.slice(1, -1);
+      return <React.Fragment key={`math-${mIdx}`}>{renderMathInline(latex)}</React.Fragment>;
     }
 
-    const boldParts = part.split(/(\*\*[^*]+\*\*)/g);
-    return boldParts.map((bPart, j) => {
-      if (bPart.startsWith('**') && bPart.endsWith('**')) {
+    // 2. Split by inline code `...`
+    const codeParts = mPart.split(/(`[^`]+`)/g);
+    
+    return codeParts.map((part, i) => {
+      if (part.startsWith('`') && part.endsWith('`')) {
         return (
-          <strong key={`${i}-${j}`} className="font-bold text-[#16120D] dark:text-zinc-100 font-sans">
-            {bPart.slice(2, -2)}
-          </strong>
+          <code key={i} className="px-1.5 py-0.5 mx-0.5 rounded bg-[#EAE3D5] dark:bg-zinc-800 border border-[#DDD3C1] dark:border-zinc-700 text-[#231D16] dark:text-zinc-200 font-mono text-xs font-semibold">
+            {part.slice(1, -1)}
+          </code>
         );
       }
-      
-      const italicParts = bPart.split(/(\*[^*]+\*)/g);
-      return italicParts.map((itPart, k) => {
-        if (itPart.startsWith('*') && itPart.endsWith('*')) {
+
+      // 3. Split by bold **...**
+      const boldParts = part.split(/(\*\*[^*]+\*\*)/g);
+      return boldParts.map((bPart, j) => {
+        if (bPart.startsWith('**') && bPart.endsWith('**')) {
           return (
-            <em key={`${i}-${j}-${k}`} className="italic text-[#4F4335] dark:text-zinc-300">
-              {itPart.slice(1, -1)}
-            </em>
+            <strong key={`${i}-${j}`} className="font-bold text-[#16120D] dark:text-zinc-100 font-sans">
+              {bPart.slice(2, -2)}
+            </strong>
           );
         }
-        return itPart;
+        
+        // 4. Split by italic *...*
+        const italicParts = bPart.split(/(\*[^*]+\*)/g);
+        return italicParts.map((itPart, k) => {
+          if (itPart.startsWith('*') && itPart.endsWith('*')) {
+            return (
+              <em key={`${i}-${j}-${k}`} className="italic text-[#4F4335] dark:text-zinc-300">
+                {itPart.slice(1, -1)}
+              </em>
+            );
+          }
+          return itPart;
+        });
       });
     });
   });
@@ -51,7 +81,31 @@ export default function MarkdownRenderer({ content }) {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // 1. Fenced Code Block / ASCII Diagram -> SmartDiagramBlock
+    // 1. Math Display Block ($$ ... $$)
+    if (trimmed.startsWith('$$')) {
+      const mathLines = [];
+      if (trimmed.endsWith('$$') && trimmed.length > 4) {
+        mathLines.push(trimmed.slice(2, -2).trim());
+        i++;
+      } else {
+        i++;
+        while (i < lines.length && !lines[i].trim().endsWith('$$')) {
+          mathLines.push(lines[i]);
+          i++;
+        }
+        if (i < lines.length && lines[i].trim().endsWith('$$')) {
+          mathLines.push(lines[i].trim().replace(/\$\$$/, ''));
+          i++;
+        }
+      }
+      const rawLatex = mathLines.join(' ').trim();
+      elements.push(
+        <MathFormulaCard key={`math-block-${elements.length}`} formula={rawLatex} />
+      );
+      continue;
+    }
+
+    // 2. Fenced Code Block / ASCII Diagram -> SmartDiagramBlock
     if (trimmed.startsWith('```')) {
       const codeLines = [];
       i++;
@@ -67,7 +121,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 2. Horizontal Rule (---)
+    // 3. Horizontal Rule (---)
     if (trimmed === '---' || trimmed === '***') {
       elements.push(
         <hr key={`hr-${elements.length}`} className="my-8 border-t border-[#DDD3C1]/80 dark:border-zinc-800/80" />
@@ -76,7 +130,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 3. Blockquotes / Formula Callouts (> ...)
+    // 4. Blockquotes / Formula Callouts (> ...)
     if (trimmed.startsWith('>')) {
       const quoteLines = [];
       while (i < lines.length && lines[i].trim().startsWith('>')) {
@@ -103,7 +157,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 4. Headings
+    // 5. Headings
     if (trimmed.startsWith('## ')) {
       elements.push(
         <h2 key={`h2-${elements.length}`} className="text-xl sm:text-2xl font-bold text-[#16120D] dark:text-zinc-100 mt-8 mb-3 font-sans border-b border-[#DDD3C1]/50 dark:border-zinc-800/50 pb-2">
@@ -132,7 +186,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 5. Markdown Table (| col | col |)
+    // 6. Markdown Table (| col | col |)
     if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
       const tableLines = [];
       while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
@@ -177,7 +231,7 @@ export default function MarkdownRenderer({ content }) {
       }
     }
 
-    // 6. Unordered List (•, -, *)
+    // 7. Unordered List (•, -, *)
     if (/^[•\-\*]\s+/.test(trimmed)) {
       const listItems = [];
       while (i < lines.length && /^[•\-\*]\s+/.test(lines[i].trim())) {
@@ -197,7 +251,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 7. Ordered List (1. 2. 3.)
+    // 8. Ordered List (1. 2. 3.)
     if (/^\d+\.\s+/.test(trimmed)) {
       const listItems = [];
       while (i < lines.length && /^\d+\.\s+/.test(lines[i].trim())) {
@@ -216,7 +270,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 8. Regular paragraph
+    // 9. Regular paragraph
     if (trimmed) {
       elements.push(
         <p key={`p-${elements.length}`} className="text-sm sm:text-base text-[#382F24] dark:text-zinc-300 leading-relaxed my-2.5 font-sans">
