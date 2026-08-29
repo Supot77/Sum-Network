@@ -59,32 +59,51 @@ export default function MarkdownRenderer({ content }) {
         codeLines.push(lines[i]);
         i++;
       }
+      const rawCode = codeLines.join('\n');
       elements.push(
-        <SmartDiagramBlock key={`diag-${elements.length}`} rawContent={codeLines.join('\n')} />
+        <SmartDiagramBlock key={`diag-${elements.length}`} rawContent={rawCode} />
       );
       i++;
       continue;
     }
 
-    // 2. Horizontal Rule (--- or ***)
-    if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
+    // 2. Horizontal Rule (---)
+    if (trimmed === '---' || trimmed === '***') {
       elements.push(
-        <hr key={`hr-${elements.length}`} className="my-8 border-t border-[#DDD3C1]/80 dark:border-zinc-800" />
+        <hr key={`hr-${elements.length}`} className="my-8 border-t border-[#DDD3C1]/80 dark:border-zinc-800/80" />
       );
       i++;
       continue;
     }
 
-    // 3. Headings (# H1, ## H2, ### H3, #### H4)
-    if (trimmed.startsWith('# ')) {
+    // 3. Blockquotes / Formula Callouts (> ...)
+    if (trimmed.startsWith('>')) {
+      const quoteLines = [];
+      while (i < lines.length && lines[i].trim().startsWith('>')) {
+        quoteLines.push(lines[i].trim().replace(/^>\s*/, ''));
+        i++;
+      }
+      const quoteText = quoteLines.join(' ');
+      const isFormula = quoteText.includes('📐') || quoteText.includes('สูตร');
+
       elements.push(
-        <h1 key={`h1-${elements.length}`} className="text-2xl sm:text-3xl font-extrabold text-[#16120D] dark:text-zinc-100 mt-8 mb-4 font-sans tracking-tight">
-          {renderInline(trimmed.slice(2))}
-        </h1>
+        <div 
+          key={`quote-${elements.length}`} 
+          className={`my-4 p-4 rounded-xl border ${
+            isFormula 
+              ? 'bg-[#EAE3D5]/80 dark:bg-zinc-900 border-[#DDD3C1] dark:border-zinc-700 shadow-sm' 
+              : 'bg-[#F4EFE6] dark:bg-zinc-900/60 border-l-4 border-l-[#8E7E6A] border-[#DDD3C1]/60 dark:border-zinc-800'
+          }`}
+        >
+          <div className="text-xs sm:text-sm text-[#231D16] dark:text-zinc-200 leading-relaxed font-sans">
+            {renderInline(quoteText)}
+          </div>
+        </div>
       );
-      i++;
       continue;
     }
+
+    // 4. Headings
     if (trimmed.startsWith('## ')) {
       elements.push(
         <h2 key={`h2-${elements.length}`} className="text-xl sm:text-2xl font-bold text-[#16120D] dark:text-zinc-100 mt-8 mb-3 font-sans border-b border-[#DDD3C1]/50 dark:border-zinc-800/50 pb-2">
@@ -113,7 +132,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 4. Markdown Table (| col | col |)
+    // 5. Markdown Table (| col | col |)
     if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
       const tableLines = [];
       while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
@@ -158,7 +177,7 @@ export default function MarkdownRenderer({ content }) {
       }
     }
 
-    // 5. Unordered List (•, -, *)
+    // 6. Unordered List (•, -, *)
     if (/^[•\-\*]\s+/.test(trimmed)) {
       const listItems = [];
       while (i < lines.length && /^[•\-\*]\s+/.test(lines[i].trim())) {
@@ -178,7 +197,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 6. Ordered List (1. 2. 3.)
+    // 7. Ordered List (1. 2. 3.)
     if (/^\d+\.\s+/.test(trimmed)) {
       const listItems = [];
       while (i < lines.length && /^\d+\.\s+/.test(lines[i].trim())) {
@@ -197,7 +216,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 7. Regular paragraph
+    // 8. Regular paragraph
     if (trimmed) {
       elements.push(
         <p key={`p-${elements.length}`} className="text-sm sm:text-base text-[#382F24] dark:text-zinc-300 leading-relaxed my-2.5 font-sans">
