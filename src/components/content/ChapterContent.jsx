@@ -1,6 +1,7 @@
 import React from 'react';
-import { BookOpen, Sparkles, ArrowRight, ArrowLeft } from 'lucide-react';
+import { BookOpen, ArrowRight, ArrowLeft } from 'lucide-react';
 import QuizSection from './QuizSection';
+import StructuredContentRenderer from '../common/StructuredContentRenderer';
 import MarkdownRenderer from '../common/MarkdownRenderer';
 import DiagramVisualizer from '../common/DiagramVisualizer';
 
@@ -30,21 +31,13 @@ export default function ChapterContent({ module, onNext, onPrev, hasNext, hasPre
       {/* Embedded Visualizer Diagram Header for this module */}
       <DiagramVisualizer moduleId={module.id} sectionIndex={0} />
 
-      {/* Main Full-Length Unsummarized Markdown Content */}
+      {/* Main Content: High-Precision Structured Blocks or Markdown Fallback */}
       <div className="pt-2 text-base leading-relaxed">
-        {module.fullMarkdown ? (
+        {module.blocks && module.blocks.length > 0 ? (
+          <StructuredContentRenderer blocks={module.blocks} />
+        ) : module.fullMarkdown ? (
           <MarkdownRenderer content={module.fullMarkdown} />
-        ) : (
-          module.sections && module.sections.map((sec, idx) => (
-            <div key={idx} className="space-y-4 border-b border-[#DDD3C1]/60 dark:border-zinc-800/60 pb-8 my-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-[#16120D] dark:text-zinc-100 flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-[#8E7E6A] dark:bg-zinc-400" />
-                {sec.title}
-              </h2>
-              <MarkdownRenderer content={sec.content} />
-            </div>
-          ))
-        )}
+        ) : null}
       </div>
 
       {/* Interactive Quiz Section */}
