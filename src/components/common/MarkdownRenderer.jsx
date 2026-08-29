@@ -7,7 +7,7 @@ function renderMathInline(latex) {
   try {
     return (
       <span 
-        className="inline-katex mx-1 font-mono text-[13px] text-[#16120D] dark:text-zinc-100"
+        className="inline-katex mx-1 font-mono text-[13px] text-[#16120D] dark:text-zinc-100 font-semibold"
         dangerouslySetInnerHTML={{
           __html: katex.renderToString(latex, { displayMode: false, throwOnError: false })
         }}
@@ -35,9 +35,10 @@ function renderInline(text) {
     
     return codeParts.map((part, i) => {
       if (part.startsWith('`') && part.endsWith('`')) {
+        const codeContent = part.slice(1, -1);
         return (
-          <code key={i} className="px-1.5 py-0.5 mx-0.5 rounded bg-[#EAE3D5] dark:bg-zinc-800 border border-[#DDD3C1] dark:border-zinc-700 text-[#231D16] dark:text-zinc-200 font-mono text-xs font-semibold">
-            {part.slice(1, -1)}
+          <code key={i} className="px-1.5 py-0.5 mx-0.5 rounded-md bg-[#EAE3D5] dark:bg-zinc-800 border border-[#DDD3C1] dark:border-zinc-700 text-[#231D16] dark:text-zinc-200 font-mono text-xs font-semibold shadow-2xs">
+            {codeContent}
           </code>
         );
       }
@@ -70,6 +71,30 @@ function renderInline(text) {
   });
 }
 
+function parseFormulaCard(latexBlock) {
+  // If block starts with [Title] or has variables format
+  let title = '';
+  let latex = latexBlock;
+  let desc = '';
+  let variables = [];
+
+  const lines = latexBlock.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length > 0 && lines[0].startsWith('%title:')) {
+    title = lines[0].replace('%title:', '').trim();
+    lines.shift();
+  }
+  if (lines.length > 0 && lines[lines.length - 1].startsWith('%vars:')) {
+    const varStr = lines[lines.length - 1].replace('%vars:', '').trim();
+    variables = varStr.split(';').map(v => {
+      const [s, m] = v.split('=').map(x => x.trim());
+      return { symbol: s, meaning: m };
+    });
+    lines.pop();
+  }
+  latex = lines.join(' ');
+  return { title, latex, desc, variables };
+}
+
 export default function MarkdownRenderer({ content }) {
   if (!content) return null;
 
@@ -81,7 +106,7 @@ export default function MarkdownRenderer({ content }) {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // 1. Math Display Block ($$ ... $$)
+    // 1. Math Display Block ($$ ... $$) -> MathFormulaCard
     if (trimmed.startsWith('$$')) {
       const mathLines = [];
       if (trimmed.endsWith('$$') && trimmed.length > 4) {
@@ -98,9 +123,17 @@ export default function MarkdownRenderer({ content }) {
           i++;
         }
       }
-      const rawLatex = mathLines.join(' ').trim();
+      const rawBlock = mathLines.join('\n').trim();
+      const parsed = parseFormulaCard(rawBlock);
+
       elements.push(
-        <MathFormulaCard key={`math-block-${elements.length}`} formula={rawLatex} />
+        <MathFormulaCard 
+          key={`math-block-${elements.length}`} 
+          formula={parsed.latex} 
+          title={parsed.title}
+          description={parsed.desc}
+          variables={parsed.variables}
+        />
       );
       continue;
     }
@@ -186,7 +219,7 @@ export default function MarkdownRenderer({ content }) {
       continue;
     }
 
-    // 6. Markdown Table (| col | col |)
+    // 6. Modern Vintage Markdown Table (| col | col |)
     if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
       const tableLines = [];
       while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
@@ -196,18 +229,22 @@ export default function MarkdownRenderer({ content }) {
 
       if (tableLines.length >= 2) {
         const headerCells = tableLines[0].split('|').slice(1, -1).map(c => c.trim());
+        const alignRow = tableLines[1].split('|').slice(1, -1).map(c => c.trim());
         const rowLines = tableLines.slice(2);
 
         elements.push(
-          <div key={`table-${elements.length}`} className="my-5 overflow-x-auto rounded-xl border border-[#DDD3C1] dark:border-zinc-800 bg-[#FAF7F2] dark:bg-zinc-950/60 shadow-sm">
+          <div key={`table-${elements.length}`} className="my-6 overflow-x-auto rounded-2xl border border-[#DDD3C1] dark:border-zinc-800 bg-[#FAF7F2] dark:bg-zinc-950/70 shadow-sm">
             <table className="w-full text-xs sm:text-sm border-collapse text-left font-sans">
               <thead>
                 <tr className="bg-[#EAE3D5] dark:bg-zinc-900 border-b border-[#DDD3C1] dark:border-zinc-800 text-[#16120D] dark:text-zinc-100 font-bold">
-                  {headerCells.map((h, hIdx) => (
-                    <th key={hIdx} className="p-3 border-r border-[#DDD3C1]/60 dark:border-zinc-800 last:border-r-0">
-                      {renderInline(h)}
-                    </th>
-                  ))}
+                  {headerCells.map((h, hIdx) => {
+                    const align = alignRow[hIdx]?.startsWith(':') && alignRow[hIdx]?.endsWith(':') ? 'text-center' : alignRow[hIdx]?.endsWith(':') ? 'text-right' : 'text-left';
+                    return (
+                      <th key={hIdx} className={`p-3.5 border-r border-[#DDD3C1]/60 dark:border-zinc-800 last:border-r-0 tracking-tight font-semibold ${align}`}>
+                        {renderInline(h)}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#DDD3C1]/50 dark:divide-zinc-800/50">
@@ -215,11 +252,14 @@ export default function MarkdownRenderer({ content }) {
                   const cells = r.split('|').slice(1, -1).map(c => c.trim());
                   return (
                     <tr key={rIdx} className="hover:bg-[#EAE3D5]/40 dark:hover:bg-zinc-900/40 transition-colors">
-                      {cells.map((cell, cIdx) => (
-                        <td key={cIdx} className="p-3 border-r border-[#DDD3C1]/40 dark:border-zinc-800 last:border-r-0 text-[#382F24] dark:text-zinc-300">
-                          {renderInline(cell)}
-                        </td>
-                      ))}
+                      {cells.map((cell, cIdx) => {
+                        const align = alignRow[cIdx]?.startsWith(':') && alignRow[cIdx]?.endsWith(':') ? 'text-center' : alignRow[cIdx]?.endsWith(':') ? 'text-right' : 'text-left';
+                        return (
+                          <td key={cIdx} className={`p-3.5 border-r border-[#DDD3C1]/40 dark:border-zinc-800 last:border-r-0 text-[#382F24] dark:text-zinc-300 ${align}`}>
+                            {renderInline(cell)}
+                          </td>
+                        );
+                      })}
                     </tr>
                   );
                 })}
