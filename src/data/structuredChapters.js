@@ -503,7 +503,7 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "**ไบต์ (Byte)**: กลุ่มของบิตขนาด 8 บิต ($1\\text{ Byte} = 8\\text{ bits}$) ซึ่งสามารถแทนค่าอักขระ (Character) ตัวเลข หรือสัญลักษณ์ได้ 256 รูปแบบ ($2^8 = 256$)"
+        "**ไบต์ (Byte)**: กลุ่มของบิตขนาด 8 บิต (1 Byte = 8 bits) ซึ่งสามารถแทนค่าอักขระ (Character) ตัวเลข หรือสัญลักษณ์ได้ 256 รูปแบบ ($2^8 = 256$)"
       ]
     },
     {
@@ -1244,7 +1244,7 @@ export const STRUCTURED_CHAPTERS = {
       "items": [
         "**Unicast MAC Address**: ชี้ไปยังการ์ดแลนของอุปกรณ์ปลายทางเพียงตัวเดียว เช่น `00-1A-2B-3C-4D-5E`",
         "**Multicast MAC Address**: ชี้ไปยังกลุ่มของอุปกรณ์ที่เข้าร่วมฟังมัลติคาสต์กลุ่มเดียวกัน เช่น `01-00-5E-xx-xx-xx` (IPv4 Multicast) หรือ `33-33-xx-xx-xx-xx` (IPv6 Multicast)",
-        "**Broadcast MAC Address**: หมายเลขบรอดคาสต์สำหรับส่งถึงทุกอุปกรณ์ในเครือข่าย มีค่าเป็น 1 ทุกบิต นั่นคือ **`FF-FF-FF-FF-FF-FF`**"
+        "**Broadcast MAC Address**: หมายเลขบรอดคาสต์สำหรับส่งถึงทุกอุปกรณ์ในเครือข่าย มีค่าเป็น 1 ทุกบิต นั่นคือ `**FF-FF-FF-FF-FF-FF`**"
       ]
     },
     {
@@ -1634,13 +1634,13 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "**$1 \\sim 4094$**: ช่วงหมายเลข VLAN ID ที่สามารถสร้างและกำหนดค่าใช้งานได้จริง ($2^{12} - 2 = 4094$ VLANs)"
+        "**1 ถึง 4,094**: ช่วงหมายเลข VLAN ID ที่สามารถสร้างและกำหนดค่าใช้งานได้จริง ($2^{12} - 2 = 4094$ VLANs)"
       ]
     },
     {
       "type": "formula",
       "title": "สูตรคำนวณเครือข่าย",
-      "formula": "\\text{Usable VLAN IDs} = 2^{12} - 2 = 4094 \\quad (\\text{VLAN } 1 \\sim 4094)",
+      "formula": "\\text{Usable VLAN IDs} = 2^{12} - 2 = 4094 \\quad (\\text{VLAN } 1 ถึง 4,094)",
       "description": "",
       "variables": []
     },
@@ -1792,21 +1792,21 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "เมื่อ PC-HR ส่งข้อมูลหา Server: เฟรมเข้ามาที่ Port 1 (แปะแท็ก 10) $\\r\\to $ ส่งออก Port 3 (Port 3 มี VLAN 10 ใน untagged list จึงปลดแท็กส่งให้ Server สำเร็จ)"
+        "เมื่อ PC-HR ส่งข้อมูลหา Server: เฟรมเข้ามาที่ Port 1 (แปะแท็ก 10) → ส่งออก Port 3 (Port 3 มี VLAN 10 ใน untagged list จึงปลดแท็กส่งให้ Server สำเร็จ)"
       ]
     },
     {
       "type": "list",
       "ordered": false,
       "items": [
-        "เมื่อ Server ตอบกลับ PC-HR: เฟรมเข้ามาที่ Port 3 (แปะแท็ก 100) $\\r\\to $ ส่งออก Port 1 (Port 1 มี VLAN 100 ใน untagged list จึงปลดแท็กส่งให้ PC-HR สำเร็จ)"
+        "เมื่อ Server ตอบกลับ PC-HR: เฟรมเข้ามาที่ Port 3 (แปะแท็ก 100) → ส่งออก Port 1 (Port 1 มี VLAN 100 ใน untagged list จึงปลดแท็กส่งให้ PC-HR สำเร็จ)"
       ]
     },
     {
       "type": "list",
       "ordered": false,
       "items": [
-        "เมื่อ PC-HR พยายามส่งหา PC-Finance: เฟรมมีแท็ก 10 $\\r\\to $ ส่งไปที่ Port 2 (แต่ Port 2 ไม่มี VLAN 10 อยู่ในลิสต์) $\\r\\to $ **เฟรมถูกดรอปทิ้งทันที** ทำให้เกิดการแยกความปลอดภัยโดยสมบูรณ์!"
+        "เมื่อ PC-HR พยายามส่งหา PC-Finance: เฟรมมีแท็ก 10 → ส่งไปที่ Port 2 (แต่ Port 2 ไม่มี VLAN 10 อยู่ในลิสต์) → **เฟรมถูกดรอปทิ้งทันที** ทำให้เกิดการแยกความปลอดภัยโดยสมบูรณ์!"
       ]
     },
     {
@@ -1947,35 +1947,35 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "$10\\text{ Mbps} = 2{,}000{,}000$ ($2 \\times 10^6$)"
+        "10 Mbps = Cost 2,000,000 ($2 \\times 10^6$)"
       ]
     },
     {
       "type": "list",
       "ordered": false,
       "items": [
-        "$100\\text{ Mbps} = 200{,}000$ ($2 \\times 10^5$)"
+        "100 Mbps = Cost 200,000 ($2 \\times 10^5$)"
       ]
     },
     {
       "type": "list",
       "ordered": false,
       "items": [
-        "$1\\text{ Gbps} = 20{,}000$ ($2 \\times 10^4$)"
+        "1 Gbps = Cost 20,000 ($2 \\times 10^4$)"
       ]
     },
     {
       "type": "list",
       "ordered": false,
       "items": [
-        "$10\\text{ Gbps} = 2{,}000$ ($2 \\times 10^3$)"
+        "10 Gbps = Cost 2,000 ($2 \\times 10^3$)"
       ]
     },
     {
       "type": "list",
       "ordered": false,
       "items": [
-        "$100\\text{ Gbps} = 200$ ($2 \\times 10^2$)"
+        "100 Gbps = Cost 200 ($2 \\times 10^2$)"
       ]
     },
     {
@@ -2271,7 +2271,7 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": true,
       "items": [
-        "**เพิ่มแบนด์วิดท์ (Increased Bandwidth)**: แบนด์วิดท์ของลิงก์ตรรกะจะเท่ากับผลรวมของแบนด์วิดท์ของพอร์ตสมาชิก Active ทั้งหมด ($M \\times \\text{Bandwidth}_{\\text{port}}$ เช่น $1\\text{ Gbps} \\times 4\\text{ พอร์ต} = 4\\text{ Gbps}$)"
+        "**เพิ่มแบนด์วิดท์ (Increased Bandwidth)**: แบนด์วิดท์ของลิงก์ตรรกะจะเท่ากับผลรวมของแบนด์วิดท์ของพอร์ตสมาชิก Active ทั้งหมด (M × Bandwidth_port เช่น 1 Gbps × 4 พอร์ต = 4 Gbps)"
       ]
     },
     {
@@ -2308,7 +2308,7 @@ export const STRUCTURED_CHAPTERS = {
     {
       "type": "formula",
       "title": "สูตรคำนวณเครือข่าย",
-      "formula": "N_{\\text{total}} = M_{\\text{active}} + N_{\\text{backup}} \\implies N_{\\text{backup}} = N_{\\text{total}} - M_{\\text{active}} \\quad \\left(M_{\\text{active}} \\le N_{\\text{total}}\\right)",
+      "formula": "N_{\\text{total}} = M_{\\text{active}} + N_{\\text{backup}} \\implies N_{\\text{backup}} = N_{\\text{total}} - M_{\\text{active}} \\quad \\left(M_{\\text{active}} \\le N_{\\text{total}}ight)",
       "description": "",
       "variables": []
     },
@@ -2328,7 +2328,7 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": true,
       "items": [
-        "**การคัดเลือก Active Ports**: สวิตช์ Actor จะเป็นผู้มีสิทธิ์เด็ดขาดในการเลือกพอร์ตที่จะให้เป็น **Active Link ($M_{\\text{active}}$ พอร์ตส่งข้อมูลจริง)** โดยพิจารณาจาก **LACP Port Priority (ค่าดีฟอลต์ $32768$ ยิ่งน้อยยิ่งสำคัญ)** ตามจำนวนพอร์ตสูงสุดที่กำหนดไว้ (`max active-linknumber <M>`) ส่วนพอร์ตที่เหลือ ($N - M$) จะอยู่ในสถานะ **Inactive (Standby)** เพื่อรอสแตนด์บาย"
+        "**การคัดเลือก Active Ports**: สวิตช์ Actor จะเป็นผู้มีสิทธิ์เด็ดขาดในการเลือกพอร์ตที่จะให้เป็น **Active Link (M พอร์ต พอร์ตส่งข้อมูลจริง)** โดยพิจารณาจาก **LACP Port Priority (ค่าดีฟอลต์ $32768$ ยิ่งน้อยยิ่งสำคัญ)** ตามจำนวนพอร์ตสูงสุดที่กำหนดไว้ (`max active-linknumber <M>`) ส่วนพอร์ตที่เหลือ ($N - M$) จะอยู่ในสถานะ **Inactive (Standby)** เพื่อรอสแตนด์บาย"
       ]
     },
     {
@@ -2359,7 +2359,7 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "คือ เทคโนโลยีที่นำเอา **Fixed/Box Switch หลายๆ ตัว ($2 \\le N_{\\text{iStack}} \\le 9$ ตัว)** มาเชื่อมต่อกันผ่านสาย Stack Cable หรือพอร์ต Service Port แล้วผสานรวมให้กลายเป็น **สวิตช์เสมือนเพียงตัวเดียว (Single Logical Switch)**"
+        "คือ เทคโนโลยีที่นำเอา **Fixed/Box Switch หลายๆ ตัว (2 ถึง 9 สวิตช์ ตัว)** มาเชื่อมต่อกันผ่านสาย Stack Cable หรือพอร์ต Service Port แล้วผสานรวมให้กลายเป็น **สวิตช์เสมือนเพียงตัวเดียว (Single Logical Switch)**"
       ]
     },
     {
@@ -2399,7 +2399,7 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "คือ เทคโนโลยีการรวม **Chassis Switch (สวิตช์ขนาดใหญ่แบบตู้โมดูลาร์) จำนวน $N_{\\text{CSS}} = 2$ ตู้** เข้าด้วยกันเป็นระบบคลัสเตอร์เดียว ผ่านสายเชื่อมต่อระหว่างการ์ดประมวลผลหลัก (MPU) หรือการ์ดพอร์ต (LPU)"
+        "คือ เทคโนโลยีการรวม **Chassis Switch (สวิตช์ขนาดใหญ่แบบตู้โมดูลาร์) จำนวน 2 ตู้แชสซี ตู้** เข้าด้วยกันเป็นระบบคลัสเตอร์เดียว ผ่านสายเชื่อมต่อระหว่างการ์ดประมวลผลหลัก (MPU) หรือการ์ดพอร์ต (LPU)"
       ]
     },
     {
@@ -2450,7 +2450,7 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": true,
       "items": [
-        "เวลาในการสลับสายเมื่อเกิดเหตุขัดข้องลดลงเหลือ **น้อยกว่า 50 มิลลิวินาที ($T_{\\text{failover}} < 50\\text{ ms}$)**"
+        "เวลาในการสลับสายเมื่อเกิดเหตุขัดข้องลดลงเหลือ **น้อยกว่า 50 มิลลิวินาที (T_failover < 50 ms)**"
       ]
     },
     {
@@ -2746,7 +2746,7 @@ export const STRUCTURED_CHAPTERS = {
     {
       "type": "formula",
       "title": "3. สูตรคำนวณระยะก้าวของเครือข่าย (Magic Number / Block Size)",
-      "formula": "ext{Block Size} = 256 - \text{Subnet Mask Octet}",
+      "formula": "Block Size = 256 - \text{Subnet Mask Octet}",
       "description": "",
       "variables": [
         {
@@ -2871,15 +2871,15 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "เดิม `/24` รวมยืม 2 บิต $\\to$ เป็น **/26**",
-        "รูปแบบฐานสอง: `11111111.11111111.11111111.11000000` $\\to$ `**255.255.255.192`**"
+        "เดิม `/24` รวมยืม 2 บิต → เป็น **/26**",
+        "รูปแบบฐานสอง: `11111111.11111111.11111111.11000000` → `**255.255.255.192`**"
       ]
     },
     {
       "type": "list",
       "ordered": true,
       "items": [
-        "**คำนวณระยะก้าว (Block Size)**: $\text{Block Size} = 256 - 192 = 64$",
+        "**คำนวณระยะก้าว (Block Size)**: `Block Size = 256 - 192 = 64`",
         "**ตารางแจกแจงทั้ง 4 Subnets**:"
       ]
     },
@@ -2958,7 +2958,7 @@ export const STRUCTURED_CHAPTERS = {
       "ordered": true,
       "items": [
         "**จัดเรียงลำดับความต้องการจากแผนกที่ใช้ Host มากที่สุดไปหาน้อยที่สุดเสมอ**",
-        "**หาค่า $h$ ที่สอดคล้องกับ $2^h - 2 \\ge N_{\text{hosts}}$ (จำนวนโฮสต์ที่ต้องการ)**",
+        "**หาค่า $h$ ที่สอดคล้องกับ $2^h - 2 \\ge N_hosts$ (จำนวนโฮสต์ที่ต้องการ)**",
         "**คำนวณ Block Size ($2^h$) และ Subnet Mask ($32 - h$)**",
         "**วาง Network ID ถัดไปโดยเริ่มจาก Broadcast ID ก่อนหน้าบวก 1 ทันที**"
       ]
@@ -2999,7 +2999,7 @@ export const STRUCTURED_CHAPTERS = {
       "ordered": false,
       "items": [
         "$2^h - 2 \\ge 50 \\implies h = 6$ ($2^6 - 2 = 62$ โฮสต์)",
-        "Prefix: $32 - 6 = \text{/26}$ (`255.255.255.192`), $\text{Block Size} = 2^6 = 64$",
+        "Prefix: $32 - 6 = /26$ (`255.255.255.192`), $Block Size = 2^6 = 64$",
         "ได้ Subnet: `**192.168.10.0/26`** (ช่วงใช้งาน `192.168.10.1` ถึง `192.168.10.62`, Broadcast: `192.168.10.63`)"
       ]
     },
@@ -3016,7 +3016,7 @@ export const STRUCTURED_CHAPTERS = {
       "items": [
         "เริ่มต้นที่: `192.168.10.64`",
         "$2^h - 2 \\ge 25 \\implies h = 5$ ($2^5 - 2 = 30$ โฮสต์)",
-        "Prefix: $32 - 5 = \text{/27}$ (`255.255.255.224`), $\text{Block Size} = 2^5 = 32$",
+        "Prefix: $32 - 5 = /27$ (`255.255.255.224`), $Block Size = 2^5 = 32$",
         "ได้ Subnet: `**192.168.10.64/27`** (ช่วงใช้งาน `192.168.10.65` ถึง `192.168.10.94`, Broadcast: `192.168.10.95`)"
       ]
     },
@@ -3033,7 +3033,7 @@ export const STRUCTURED_CHAPTERS = {
       "items": [
         "เริ่มต้นที่: `192.168.10.96`",
         "$2^h - 2 \\ge 10 \\implies h = 4$ ($2^4 - 2 = 14$ โฮสต์)",
-        "Prefix: $32 - 4 = \text{/28}$ (`255.255.255.240`), $\text{Block Size} = 2^4 = 16$",
+        "Prefix: $32 - 4 = /28$ (`255.255.255.240`), $Block Size = 2^4 = 16$",
         "ได้ Subnet: `**192.168.10.96/28`** (ช่วงใช้งาน `192.168.10.97` ถึง `192.168.10.110`, Broadcast: `192.168.10.111`)"
       ]
     },
@@ -3050,7 +3050,7 @@ export const STRUCTURED_CHAPTERS = {
       "items": [
         "เริ่มต้นที่: `192.168.10.112`",
         "$2^h - 2 \\ge 2 \\implies h = 2$ ($2^2 - 2 = 2$ โฮสต์พอดี)",
-        "Prefix: $32 - 2 = \text{/30}$ (`255.255.255.252`), $\text{Block Size} = 2^2 = 4$",
+        "Prefix: $32 - 2 = /30$ (`255.255.255.252`), $Block Size = 2^2 = 4$",
         "ได้ Subnet: `**192.168.10.112/30`** (ช่วงใช้งาน `192.168.10.113` ถึง `192.168.10.114`, Broadcast: `192.168.10.115`)"
       ]
     },
@@ -3152,7 +3152,7 @@ export const STRUCTURED_CHAPTERS = {
       "type": "list",
       "ordered": false,
       "items": [
-        "ส่งแพ็กเก็ตชุดแรกด้วย `TTL = 1` $\\to$ เราเตอร์ตัวแรกได้รับ ลด TTL เหลือ 0 แล้วส่งกลับ **ICMP Time Exceeded (Type 11)** ทำให้ทราบ IP ของ Hop ที่ 1",
+        "ส่งแพ็กเก็ตชุดแรกด้วย `TTL = 1` → เราเตอร์ตัวแรกได้รับ ลด TTL เหลือ 0 แล้วส่งกลับ **ICMP Time Exceeded (Type 11)** ทำให้ทราบ IP ของ Hop ที่ 1",
         "ส่งแพ็กเก็ตถัดไปโดยเพิ่ม `TTL = 2, 3, 4, ...` ทีละขั้น เพื่อบันทึก IP ของเราเตอร์ทุกตัวตลอดเส้นทางจนถึงปลายทาง"
       ]
     },
