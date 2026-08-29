@@ -9,10 +9,13 @@ export default function Lab03_VrpCliTerminal() {
     { text: '<Router> เริ่มต้นที่ User View พิมพ์ system-view เพื่อเข้าสู่โหมดตั้งค่า หรือพิมพ์ ? เพื่อดูคำสั่ง', type: 'info' },
   ]);
 
-  const terminalEndRef = useRef(null);
+  const terminalScreenRef = useRef(null);
 
+  // Scroll only internally inside the terminal box when new logs appear, never scroll the page window
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (terminalScreenRef.current) {
+      terminalScreenRef.current.scrollTop = terminalScreenRef.current.scrollHeight;
+    }
   }, [logs]);
 
   const getPrompt = () => {
@@ -81,8 +84,11 @@ export default function Lab03_VrpCliTerminal() {
         </button>
       </div>
 
-      {/* Terminal Screen */}
-      <div className="h-64 sm:h-72 rounded-xl bg-zinc-950 border border-zinc-800 p-4 text-xs overflow-y-auto space-y-1.5">
+      {/* Terminal Screen (Internal Scroll Only) */}
+      <div 
+        ref={terminalScreenRef}
+        className="h-64 sm:h-72 rounded-xl bg-zinc-950 border border-zinc-800 p-4 text-xs overflow-y-auto space-y-1.5"
+      >
         {logs.map((l, i) => (
           <div key={i} className={`whitespace-pre-line ${
             l.type === 'input' ? 'text-zinc-100 font-bold' :
@@ -94,10 +100,9 @@ export default function Lab03_VrpCliTerminal() {
             {l.text}
           </div>
         ))}
-        <div ref={terminalEndRef} />
       </div>
 
-      {/* Input Field */}
+      {/* Input Field (No autoFocus to prevent unwanted page scrolling) */}
       <form onSubmit={handleCommand} className="flex items-center gap-2 p-2 rounded-xl bg-zinc-900 border border-zinc-800">
         <span className="text-xs font-bold text-zinc-300 pl-2">{getPrompt()}</span>
         <input
@@ -106,7 +111,6 @@ export default function Lab03_VrpCliTerminal() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="พิมพ์คำสั่ง เช่น system-view, display version, ? ..."
           className="flex-1 bg-transparent text-xs text-zinc-100 focus:outline-none placeholder:text-zinc-600"
-          autoFocus
         />
         <button type="submit" className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200">
           <CornerDownLeft className="w-3.5 h-3.5" />
