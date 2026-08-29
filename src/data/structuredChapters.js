@@ -1058,6 +1058,10 @@ export const STRUCTURED_CHAPTERS = {
   ],
   "4": [
     {
+      "type": "callout",
+      "text": "**คำอธิบายภาพรวม**: เจาะลึกหลักการทำงานของเทคโนโลยีเครือข่ายอีเทอร์เน็ต (IEEE 802.3) โครงสร้างหมายเลขฮาร์ดแวร์ MAC Address (48 บิต) โครงสร้าง Ethernet II Frame และกลไกการส่งต่อเฟรมของสวิตช์ Layer 2 (Flooding, Forwarding, Discarding) พร้อมกระบวนการเรียนรู้และอัปเดตตาราง MAC Address Table และการทำงานของโปรโตคอล ARP"
+    },
+    {
       "type": "divider"
     },
     {
@@ -1067,11 +1071,54 @@ export const STRUCTURED_CHAPTERS = {
     },
     {
       "type": "paragraph",
-      "text": "**อีเทอร์เน็ต (Ethernet)** เป็นเทคโนโลยีเครือข่ายเฉพาะที่ (LAN) ที่ได้รับการยอมรับและใช้งานแพร่หลายที่สุดในโลก ได้รับการพัฒนาและกำหนดมาตรฐานสากลโดยคณะทำงาน **IEEE 802.3**"
+      "text": "**อีเทอร์เน็ต (Ethernet)** เป็นเทคโนโลยีเครือข่ายเฉพาะที่ (LAN) ที่ได้รับการยอมรับและใช้งานแพร่หลายที่สุดในโลก ได้รับการพัฒนาและกำหนดมาตรฐานสากลโดยคณะทำงาน **IEEE 802.3**:"
     },
     {
-      "type": "diagram",
-      "content": "\n+---------------------------------------------------------------------------------------------------+\n\n| มาตรฐาน (Standard) | ชื่อทางการ (Name)     | อัตราความเร็ว (Speed) | ตัวกลางสื่อสาร (Medium)             |\n\n+--------------------+-----------------------+-----------------------+-------------------------------------+\n\n| IEEE 802.3         | Standard Ethernet     | 10 Mbps               | สายทองแดงคู่บิดเกลียว (10BASE-T)   |\n\n| IEEE 802.3u        | Fast Ethernet         | 100 Mbps              | สายคู่บิดเกลียว Cat5 (100BASE-TX)  |\n\n| IEEE 802.3z / ab   | Gigabit Ethernet (GE) | 1,000 Mbps (1 Gbps)   | ใยแก้วนำแสง / สาย Cat5e/6 (1000BASE-T)|\n\n| IEEE 802.3ae       | 10 Gigabit Ethernet   | 10,000 Mbps (10 Gbps) | ใยแก้วนำแสง Single/Multi-mode       |\n\n| IEEE 802.3ba       | 40GE / 100GE          | 40 Gbps / 100 Gbps    | ใยแก้วนำแสงประสิทธิภาพสูงใน Data Center|\n\n+---------------------------------------------------------------------------------------------------+\n"
+      "type": "table",
+      "headers": [
+        "มาตรฐาน (Standard)",
+        "ชื่อทางการ (Name)",
+        "อัตราความเร็ว (Speed)",
+        "ตัวกลางสื่อสาร (Medium)"
+      ],
+      "rows": [
+        [
+          "**IEEE 802.3**",
+          "Standard Ethernet",
+          "10 Mbps",
+          "สายทองแดงคู่บิดเกลียว (10BASE-T)"
+        ],
+        [
+          "**IEEE 802.3u**",
+          "Fast Ethernet",
+          "100 Mbps",
+          "สายคู่บิดเกลียว Cat5 (100BASE-TX)"
+        ],
+        [
+          "**IEEE 802.3z / ab**",
+          "Gigabit Ethernet (GE)",
+          "1,000 Mbps (1 Gbps)",
+          "ใยแก้วนำแสง / สาย Cat5e/6 (1000BASE-T)"
+        ],
+        [
+          "**IEEE 802.3ae**",
+          "10 Gigabit Ethernet",
+          "10,000 Mbps (10 Gbps)",
+          "ใยแก้วนำแสง Single/Multi-mode"
+        ],
+        [
+          "**IEEE 802.3ba**",
+          "40GE / 100GE",
+          "40 Gbps / 100 Gbps",
+          "ใยแก้วนำแสงประสิทธิภาพสูงใน Data Center"
+        ]
+      ],
+      "aligns": [
+        "left",
+        "left",
+        "left",
+        "left"
+      ]
     },
     {
       "type": "divider"
@@ -1087,59 +1134,348 @@ export const STRUCTURED_CHAPTERS = {
     },
     {
       "type": "diagram",
-      "content": "\n(1) Collision Domain (โดเมนการชนกันของสัญญาณ)\n\n    [PC1] ----\n\n    [PC2] ----- [ Hub / Repeater ]  <--- อุปกรณ์ทั้งหมดแชร์สายสัญญาณเดียวกัน หากส่งพร้อมกันจะชนกัน!\n\n    [PC3] ----/\n\n\n\n(2) Micro-segmentation with Switch (สลับสายสัญญาณอิสระ)\n\n    [PC1] <---> [ Port 1 |        ]\n\n    [PC2] <---> [ Port 2 | Switch ] <--- แต่ละพอร์ตเป็น 1 Collision Domain แยกขาดจากกันโดยสมบูรณ์\n\n    [PC3] <---> [ Port 3 |        ]      (ทำงานแบบ Full-Duplex ไม่มีการชนของสัญญาณ)\n\n\n\n(3) Broadcast Domain (ขอบเขตการแพร่กระจายสัญญาณบรอดคาสต์)\n\n    +-----------------------------------------------+\n\n    |  [PC1] ---- [ Switch 1 ] ---- [ PC2 ]         |\n\n|                   |                           | <--- ทั้งหมดนี้อยู่ใน 1 Broadcast Domain เดียวกัน!  |             [ Switch 2 ] ---- [ PC3 ]         |\n\n    +-----------------------------------------------+\n\n                            |\n\n                       [ Router ] <--- เราเตอร์แบ่งแยก Broadcast Domain ออกจากกัน\n\n                            |\n\n    +-----------------------------------------------+\n\n|             [ Switch 3 ] ---- [ PC4 ]         | <--- Broadcast Domain ใหม่  +-----------------------------------------------+  ```    ### 2.1 ตารางเปรียบเทียบ Collision Domain vs. Broadcast Domain    | คุณลักษณะ (Feature) | คอลลิชันโดเมน (Collision Domain) | บรอดคาสต์โดเมน (Broadcast Domain) |\n\n| :--- | :--- | :--- |\n\n| **นิยาม (Definition)** | ขอบเขตทางกายภาพที่เมื่อมีอุปกรณ์ 2 ตัวส่งข้อมูลพร้อมกัน สัญญาณไฟฟ้าจะเกิดการชนกัน (Collision) | ขอบเขตทางตรรกะที่เมื่อมีอุปกรณ์ส่งเฟรมบรอดคาสต์ อุปกรณ์ทุกตัวในขอบเขตนั้นจะได้รับเฟรมดังกล่าว |\n\n| **อุปกรณ์ที่ใช้แบ่งแยกขอบเขต** | **สวิตช์ (Switch)** และ **บริดจ์ (Bridge)** (แต่ละพอร์ตของสวิตช์คือ 1 Collision Domain) | **เราเตอร์ (Router)** และการแบ่ง **VLAN บนสวิตช์** |\n\n| **ผลกระทบหากขอบเขตมีขนาดใหญ่เกินไป** | เกิดการชนกันของข้อมูลบ่อยครั้ง ประสิทธิภาพการรับส่งข้อมูลของทั้งเครือข่ายลดลงอย่างรุนแรง | เปลืองแบนด์วิดท์และ CPU ของอุปกรณ์ปลายทางทุกตัวในการประมวลผลบรอดคาสต์ (เสี่ยงต่อ Broadcast Storm) |\n\n\n\n### 2.2 กลไก CSMA/CD และโหมดการส่งสัญญาณ (Duplex Modes)\n\n- **Half-Duplex (กึ่งสองทิศทาง)**: อุปกรณ์สามารถรับหรือส่งข้อมูลได้ทีละขณะเดียว ไม่สามารถส่งพร้อมกันได้ ต้องใช้โปรโตคอล **CSMA/CD (Carrier Sense Multiple Access with Collision Detection)** ในการคอยฟังสัญญาณก่อนส่ง และหยุดสุ่มเวลารอเมื่อตรวจพบการชนกัน\n\n- **Full-Duplex (สองทิศทางพร้อมกัน)**: อุปกรณ์สามารถส่งและรับข้อมูลได้พร้อมกันในเวลาเดียวกันผ่านคู่สายสัญญาณที่แยกจากกัน ไม่เกิดการชนกันของข้อมูล (Collision-Free) และไม่ต้องใช้งาน CSMA/CD อีกต่อไป ซึ่งเป็นโหมดมาตรฐานของพอร์ตสวิตช์สมัยใหม่\n\n\n\n---\n\n\n\n## 3. โครงสร้างและการจำแนกประเภทของ MAC Address (MAC Address Architecture)\n\n\n\n**MAC Address (Media Access Control Address)** หรือ Physical Address คือ หมายเลขประจำตัวทางกายภาพระดับฮาร์ดแวร์ของอุปกรณ์เครือข่าย (NIC - Network Interface Card) มีขนาดความยาว **48 บิต (6 ไบต์)** เขียนแสดงผลด้วยเลขฐานสิบหก (Hexadecimal) 12 หลัก (เช่น `00-e0-fc-12-34-56` หรือ `00e0-fc12-3456`)\n\n\n\n$$ \\text{Total MAC Space} = 2^{48} = 281{,}474{,}976{,}710{,}656 \\approx 2.81 \\times 10^{14}\\text{ addresses} $$\n\n\n"
+      "content": "(1) Collision Domain (โดเมนการชนกันของสัญญาณ)\n    [PC1] ----\n    [PC2] ----- [ Hub / Repeater ]  <--- อุปกรณ์ทั้งหมดแชร์สายเดียวกัน หากส่งพร้อมกันจะชนกัน!\n    [PC3] ----/\n\n(2) Micro-segmentation with Switch (สลับสายสัญญาณอิสระ)\n    [PC1] <---> [ Port 1 |        ]\n    [PC2] <---> [ Port 2 | Switch ] <--- แต่ละพอร์ตเป็น 1 Collision Domain แยกขาดจากกัน\n    [PC3] <---> [ Port 3 |        ]      (ทำงานแบบ Full-Duplex ไม่มีการชนของสัญญาณ)\n\n(3) Broadcast Domain (ขอบเขตการแพร่กระจายสัญญาณบรอดคาสต์)\n    +-----------------------------------------------+\n    |  [PC1] ---- [ Switch 1 ] ---- [ PC2 ]         |\n    |                   |                           | <--- ทั้งหมดอยู่ใน 1 Broadcast Domain\n    |             [ Switch 2 ] ---- [ PC3 ]         |\n    +-----------------------------------------------+\n                            |\n                       [ Router ] <--- เราเตอร์แบ่งแยก Broadcast Domain ออกจากกัน\n                            |\n    +-----------------------------------------------+\n    |             [ Switch 3 ] ---- [ PC4 ]         | <--- Broadcast Domain ใหม่\n    +-----------------------------------------------+"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "2.1 ตารางเปรียบเทียบ Collision Domain vs. Broadcast Domain"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "คุณลักษณะ (Feature)",
+        "คอลลิชันโดเมน (Collision Domain)",
+        "บรอดคาสต์โดเมน (Broadcast Domain)"
+      ],
+      "rows": [
+        [
+          "**นิยาม (Definition)**",
+          "ขอบเขตทางกายภาพที่เมื่อมีอุปกรณ์ 2 ตัวส่งข้อมูลพร้อมกัน สัญญาณไฟฟ้าจะเกิดการชนกัน (Collision)",
+          "ขอบเขตทางตรรกะที่เมื่อมีอุปกรณ์ส่งเฟรมบรอดคาสต์ อุปกรณ์ทุกตัวในขอบเขตนั้นจะได้รับเฟรมดังกล่าว"
+        ],
+        [
+          "**อุปกรณ์ที่ใช้แบ่งแยกขอบเขต**",
+          "**สวิตช์ (Switch)** และ **บริดจ์ (Bridge)** (แต่ละพอร์ตของสวิตช์คือ 1 Collision Domain)",
+          "**เราเตอร์ (Router)** และการแบ่ง **VLAN บนสวิตช์**"
+        ],
+        [
+          "**ผลกระทบหากขอบเขตใหญ่เกินไป**",
+          "เกิดการชนกันของข้อมูลบ่อยครั้ง ประสิทธิภาพการรับส่งข้อมูลของเครือข่ายลดลงอย่างรุนแรง",
+          "เปลืองแบนด์วิดท์และ CPU ของอุปกรณ์ปลายทางทุกตัวในการประมวลผล (เสี่ยงต่อ Broadcast Storm)"
+        ]
+      ],
+      "aligns": [
+        "left",
+        "left",
+        "left"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "2.2 กลไก CSMA/CD และโหมดการส่งสัญญาณ (Duplex Modes)"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Half-Duplex (กึ่งสองทิศทาง)**: อุปกรณ์สามารถรับหรือส่งข้อมูลได้ทีละขณะเดียว ไม่สามารถส่งพร้อมกันได้ ต้องใช้โปรโตคอล **CSMA/CD (Carrier Sense Multiple Access with Collision Detection)** ในการคอยฟังสัญญาณก่อนส่ง และหยุดสุ่มเวลารอเมื่อตรวจพบการชนกัน",
+        "**Full-Duplex (สองทิศทางพร้อมกัน)**: อุปกรณ์สามารถส่งและรับข้อมูลได้พร้อมกันในเวลาเดียวกันผ่านคู่สายสัญญาณที่แยกจากกัน ไม่เกิดการชนกันของข้อมูล (Collision-Free) และไม่ต้องใช้งาน CSMA/CD อีกต่อไป ซึ่งเป็นโหมดมาตรฐานของพอร์ตสวิตช์สมัยใหม่"
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "3. โครงสร้างและการจำแนกประเภทของ MAC Address (MAC Address Architecture)"
     },
     {
       "type": "paragraph",
-      "text": "+-------------------------------------------------------+"
+      "text": "**MAC Address (Media Access Control Address)** หรือ Physical Address คือ หมายเลขประจำตัวทางกายภาพระดับฮาร์ดแวร์ของการ์ดแลน (NIC) มีขนาดความยาว **48 บิต (6 ไบต์)** เขียนแสดงผลด้วยเลขฐานสิบหก 12 หลัก (เช่น `00-e0-fc-12-34-56` หรือ `00e0-fc12-3456`):"
     },
     {
-      "type": "paragraph",
-      "text": "+---------------------------+---------------------------+"
-    },
-    {
-      "type": "paragraph",
-      "text": "+---------------------------+---------------------------+"
-    },
-    {
-      "type": "paragraph",
-      "text": "+-----------+-----------+---------------+---------------+------------+-----------------------+-----------+"
+      "type": "formula",
+      "title": "ขนาดพื้นที่แอดเดรสทั้งหมดของ MAC Address (Total MAC Space)",
+      "formula": "ext{Total MAC Space} = 2^{48} = 281{,}474{,}976{,}710{,}656 \u0007pprox 2.81 \times 10^{14} \text{ Addresses}",
+      "description": "",
+      "variables": [
+        {
+          "symbol": "48",
+          "meaning": "จำนวนบิตทั้งหมดของ MAC Address"
+        },
+        {
+          "symbol": "2.81 \times 10^{14}",
+          "meaning": "281 ล้านล้านแอดเดรส"
+        }
+      ]
     },
     {
       "type": "diagram",
-      "content": "\n\n\n$$ \\text{Ethernet II Frame Size} = \\text{Header}(14\\text{B}) + \\text{Payload}(46 \\sim 1500\\text{B}) + \\text{FCS}(4\\text{B}) = [64, 1518]\\text{ Bytes} $$\n\n\n\n1. **Preamble (7 ไบต์)**: ลำดับสัญญาณบิตสลับ `10101010` เพื่อซิงโครไนซ์สัญญาณนาฬิกาของภาครับ\n\n2. **SFD (Start Frame Delimiter - 1 ไบต์)**: ลำดับบิต `10101011` เพื่อระบุจุดเริ่มต้นของเนื้อหาเฟรม\n\n3. **Destination MAC (6 ไบต์)**: หมายเลข MAC Address ของเครื่องปลายทาง\n\n4. **Source MAC (6 ไบต์)**: หมายเลข MAC Address ของเครื่องต้นทาง\n\n5. **Type / EtherType (2 ไบต์)**: ระบุชนิดของโปรโตคอลใน Network Layer ที่บรรจุอยู่ข้างใน เช่น:\n\n   - `0x0800` = IPv4 Protocol\n\n   - `0x0806` = ARP (Address Resolution Protocol)\n\n   - `0x86DD` = IPv6 Protocol\n\n6. **Data / Payload (46 ถึง 1,500 ไบต์)**: ข้อมูลจากชั้นบน (ขนาดขั้นต่ำ $46\\text{ Bytes}$ หากไม่พอจะเติม Padding ให้ครบ)\n\n7. **FCS (Frame Check Sequence - 4 ไบต์)**: รหัสตรวจสอบความถูกต้องของข้อมูลโดยใช้อัลกอริทึม **CRC-32 (Cyclic Redundancy Check)** หากผู้รับคำนวณแล้วไม่ตรงจะดรอปเฟรมทิ้งทันที\n\n\n\n---\n\n\n\n## 5. หลักการทำงานของสวิตช์เลเยอร์ 2 (Layer 2 Switching Principles)\n\n\n\nสวิตช์ทำงานโดยการเก็บรักษาและอ้างอิงข้อมูลในตาราง **MAC Address Table (หรือ CAM Table)** ซึ่งจับคู่ระหว่างหมายเลข MAC Address, พอร์ตทางกายภาพ (Port) และ VLAN\n\n\n\n### 5.1 พฤติกรรมการจัดการเฟรม 3 รูปแบบของสวิตช์ (Three Frame Processing Behaviors)\n\n\n"
+      "content": "+-------------------------------------------------------+\n|                    MAC Address (48 Bits)              |\n+---------------------------+---------------------------+\n| 24 Bits: OUI (Vendor ID)  | 24 Bits: Vendor-Assigned  |\n+---------------------------+---------------------------+\n  |        |\n  |        +---> Bit 8 (G/L Bit): 0 = Globally Administered, 1 = Locally Administered\n  +------------> Bit 7 (I/G Bit): 0 = Individual (Unicast),  1 = Group (Multicast/Broadcast)"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**OUI (Organizationally Unique Identifier - 24 บิตแรก)**: รหัสระบุผู้ผลิตอุปกรณ์ที่ได้รับการจัดสรรจากองค์กร IEEE ($2^{24} = 16{,}777{,}216$ ค่า เช่น `00-E0-FC` เป็นรหัสของ Huawei)",
+        "**Vendor Assigned / Device ID (24 บิตหลัง)**: หมายเลขลำดับชิ้นงานที่ผู้ผลิตกำหนดให้กับอุปกรณ์แต่ละชิ้นไม่ให้ซ้ำกัน ($2^{24} = 16{,}777{,}216$ อุปกรณ์ต่อ OUI)",
+        "**I/G Bit (Individual / Group Bit - บิตที่ 8 ของไบต์แรก)**:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "บิตเป็น `0`: เป็น **Unicast MAC Address** (แอดเดรสระบุอุปกรณ์เดี่ยว)",
+        "บิตเป็น `1`: เป็น **Multicast / Broadcast MAC Address** (แอดเดรสระบุกลุ่มหรือทั้งหมด)"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "3.1 การจำแนกประเภทของ MAC Address"
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "**Unicast MAC Address**: ชี้ไปยังการ์ดแลนของอุปกรณ์ปลายทางเพียงตัวเดียว เช่น `00-1A-2B-3C-4D-5E`",
+        "**Multicast MAC Address**: ชี้ไปยังกลุ่มของอุปกรณ์ที่เข้าร่วมฟังมัลติคาสต์กลุ่มเดียวกัน เช่น `01-00-5E-xx-xx-xx` (IPv4 Multicast) หรือ `33-33-xx-xx-xx-xx` (IPv6 Multicast)",
+        "**Broadcast MAC Address**: หมายเลขบรอดคาสต์สำหรับส่งถึงทุกอุปกรณ์ในเครือข่าย มีค่าเป็น 1 ทุกบิต นั่นคือ **`FF-FF-FF-FF-FF-FF`**"
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "4. โครงสร้างของอีเทอร์เน็ตเฟรม (Ethernet Frame Formats)"
     },
     {
       "type": "paragraph",
-      "text": "+---------------------------------------------------------------------------------------------------+"
-    },
-    {
-      "type": "paragraph",
-      "text": "+------------------------+---------------------------------------------------+------------------------------+"
-    },
-    {
-      "type": "paragraph",
-      "text": "+------------------------+---------------------------------------------------+------------------------------+"
-    },
-    {
-      "type": "paragraph",
-      "text": "+------------------------+---------------------------------------------------+------------------------------+"
-    },
-    {
-      "type": "paragraph",
-      "text": "+------------------------+---------------------------------------------------+------------------------------+"
+      "text": "ในระบบเครือข่ายปัจจุบัน รูปแบบเฟรมที่นิยมใช้งานมากที่สุดคือ **Ethernet II Frame**:"
     },
     {
       "type": "diagram",
-      "content": "\n\n\n### 5.2 กลไกการเรียนรู้ตาราง MAC Address (MAC Learning & Aging Process)\n\n1. **การเรียนรู้ Source MAC (Source MAC Learning)**: เมื่อมีเฟรมส่งเข้ามาที่พอร์ตใด สวิตช์จะตรวจสอบหมายเลข **Source MAC** ในเฟรมนั้น หากยังไม่มีในตาราง สวิตช์จะบันทึกคู่ของ `{Source MAC, Port, VLAN}` ลงในตาราง MAC Address Table พร้อมเริ่มนับเวลา **Aging Timer**\n\n2. **การค้นหา Destination MAC (Destination MAC Lookup)**: สวิตช์จะตรวจสอบหมายเลข **Destination MAC** ในตาราง:\n\n   - หากพบ และพอร์ตปลายทางไม่ใช่พอร์ตเดิม $\\r\\to $ ทำการ **Forwarding**\n\n   - หากไม่พบ $\\r\\to $ ทำการ **Flooding**\n\n3. **กระบวนการลบรายการที่หมดอายุ (Aging Mechanism)**: รายการในตาราง MAC จะมีตัวนับเวลาถอยหลัง (Aging Timer ค่าดีฟอลต์คือ **300 วินาที** หรือ $5\\text{ นาที}$) หากไม่มีทราฟฟิกจากอุปกรณ์นั้นส่งเข้ามาอีกภายใน 300 วินาที รายการดังกล่าวจะถูกลบออกจากตารางโดยอัตโนมัติ เพื่อป้องกันการอ้างอิงพอร์ตผิดพลาดเมื่อมีการย้ายตำแหน่งเครื่อง\n\n\n\n---\n\n\n\n## 6. เจาะลึกกระบวนการรับส่งข้อมูลภายในเน็ตเวิร์กเดียวกันตั้งแต่ต้นจนจบ (Intra-Subnet End-to-End Flow)\n\n\n\nสมมุติสถานการณ์: **PC1 (`192.168.1.1`, MAC-A)** ต้องการส่งข้อมูลหา **PC2 (`192.168.1.2`, MAC-B)** ผ่านสวิตช์ โดยที่ตาราง ARP ของ PC1 และตาราง MAC ของสวิตช์ยังว่างเปล่า:\n\n\n"
+      "content": "+-----------+-----------+---------------+---------------+------------+-----------------------+-----------+\n| Preamble  | SFD       | D.MAC         | S.MAC         | Type       | Data / Payload        | FCS       |\n| (7 Bytes) | (1 Byte)  | (6 Bytes)     | (6 Bytes)     | (2 Bytes)  | (46 - 1500 Bytes)     | (4 Bytes) |\n+-----------+-----------+---------------+---------------+------------+-----------------------+-----------+"
+    },
+    {
+      "type": "formula",
+      "title": "ขนาดของ Ethernet II Frame มาตรฐาน (Ethernet II Frame Size)",
+      "formula": "ext{Ethernet II Frame Size} = \text{Header}(14\text{B}) + \text{Payload}(46 \\sim 1500\text{B}) + \text{FCS}(4\text{B}) = [64, 1518] \text{ Bytes}",
+      "description": "",
+      "variables": [
+        {
+          "symbol": "64",
+          "meaning": "ขนาดเฟรมขั้นต่ำสุด (Minimum Frame Size)"
+        },
+        {
+          "symbol": "1518",
+          "meaning": "ขนาดเฟรมสูงสุด (MTU 1500 + Header/FCS 18B)"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**Preamble (7 ไบต์)**: ลำดับสัญญาณบิตสลับ `10101010` เพื่อซิงโครไนซ์สัญญาณนาฬิกาของภาครับ",
+        "**SFD (Start Frame Delimiter - 1 ไบต์)**: ลำดับบิต `10101011` เพื่อระบุจุดเริ่มต้นของเนื้อหาเฟรม",
+        "**Destination MAC (6 ไบต์)**: หมายเลข MAC Address ของเครื่องปลายทาง",
+        "**Source MAC (6 ไบต์)**: หมายเลข MAC Address ของเครื่องต้นทาง",
+        "**Type / EtherType (2 ไบต์)**: ระบุชนิดของโปรโตคอลใน Network Layer ที่บรรจุอยู่ข้างใน เช่น:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "`0x0800` = IPv4 Protocol",
+        "`0x0806` = ARP (Address Resolution Protocol)",
+        "`0x86DD` = IPv6 Protocol"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**Data / Payload (46 ถึง 1,500 ไบต์)**: ข้อมูลจากชั้นบน (ขนาดขั้นต่ำ 46 ไบต์ หากไม่พอจะเติม Padding ให้ครบ)",
+        "**FCS (Frame Check Sequence - 4 ไบต์)**: รหัสตรวจสอบความถูกต้องของข้อมูลโดยใช้อัลกอริทึม **CRC-32 (Cyclic Redundancy Check)** หากผู้รับคำนวณแล้วไม่ตรงจะดรอปเฟรมทิ้งทันที"
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "5. หลักการทำงานของสวิตช์เลเยอร์ 2 (Layer 2 Switching Principles)"
     },
     {
       "type": "paragraph",
-      "text": "[PC1: 192.168.1.1 / MAC-A] <---Port 1---> [ Switch ] <---Port 2---> [PC2: 192.168.1.2 / MAC-B]"
+      "text": "สวิตช์ทำงานโดยการเก็บรักษาและอ้างอิงข้อมูลในตาราง **MAC Address Table (หรือ CAM Table)** ซึ่งจับคู่ระหว่างหมายเลข MAC Address, พอร์ตทางกายภาพ (Port) และ VLAN:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "5.1 พฤติกรรมการจัดการเฟรม 3 รูปแบบของสวิตช์ (Three Frame Processing Behaviors)"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "พฤติกรรม (Behavior)",
+        "เงื่อนไขการเกิด (Trigger Condition)",
+        "การกระทำของสวิตช์ (Action)"
+      ],
+      "rows": [
+        [
+          "**1. Flooding (การฟลัด)**",
+          "- Unknown Unicast (ไม่พบ Dest MAC ในตาราง)<br>- Broadcast Frame (`FF-FF-FF-FF-FF-FF`)<br>- Multicast Frame",
+          "ส่งสำเนาเฟรมออกไปทุกพอร์ต ยกเว้นพอร์ตที่รับเฟรมเข้ามา"
+        ],
+        [
+          "**2. Forwarding (ส่งต่อ)**",
+          "- Known Unicast (พบ Dest MAC ในตารางตรงกับพอร์ตอื่น)",
+          "ส่งเฟรมออกเฉพาะพอร์ตปลายทางที่ระบุในตาราง"
+        ],
+        [
+          "**3. Discarding (ทิ้ง)**",
+          "- เฟรมมีข้อผิดพลาด FCS เสียหาย<br>- พบ Dest MAC อยู่บนพอร์ตเดียวกับพอร์ตที่รับเข้ามา",
+          "ดรอปเฟรมทิ้งในทันที (Filtering / Drop) ไม่ส่งต่อ"
+        ]
+      ],
+      "aligns": [
+        "left",
+        "left",
+        "left"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "5.2 กลไกการเรียนรู้ตาราง MAC Address (MAC Learning & Aging Process)"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**การเรียนรู้ Source MAC (Source MAC Learning)**: เมื่อมีเฟรมส่งเข้ามาที่พอร์ตใด สวิตช์จะตรวจสอบหมายเลข **Source MAC** ในเฟรมนั้น หากยังไม่มีในตาราง สวิตช์จะบันทึกคู่ของ `{Source MAC, Port, VLAN}` ลงในตาราง MAC Address Table พร้อมเริ่มนับเวลา **Aging Timer**",
+        "**การค้นหา Destination MAC (Destination MAC Lookup)**: สวิตช์จะตรวจสอบหมายเลข **Destination MAC** ในตาราง:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "หากพบ และพอร์ตปลายทางไม่ใช่พอร์ตเดิม $\to$ ทำการ **Forwarding**",
+        "หากไม่พบ $\to$ ทำการ **Flooding**"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**กระบวนการลบรายการที่หมดอายุ (Aging Mechanism)**: รายการในตาราง MAC จะมีตัวนับเวลาถอยหลัง (Aging Timer ค่าดีฟอลต์คือ **300 วินาที** หรือ 5 นาที) หากไม่มีทราฟฟิกจากอุปกรณ์นั้นส่งเข้ามาอีกภายใน 300 วินาที รายการดังกล่าวจะถูกลบออกจากตารางโดยอัตโนมัติ เพื่อป้องกันการอ้างอิงพอร์ตผิดพลาดเมื่อมีการย้ายตำแหน่งเครื่อง"
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "6. เจาะลึกกระบวนการรับส่งข้อมูลภายในเน็ตเวิร์กเดียวกันตั้งแต่ต้นจนจบ (Intra-Subnet End-to-End Flow)"
+    },
+    {
+      "type": "paragraph",
+      "text": "สมมุติสถานการณ์: **PC1 (`192.168.1.1`, MAC-A)** ต้องการส่งข้อมูลหา **PC2 (`192.168.1.2`, MAC-B)** ผ่านสวิตช์ โดยที่ตาราง ARP ของ PC1 และตาราง MAC ของสวิตช์ยังว่างเปล่า:"
     },
     {
       "type": "diagram",
-      "content": "\n\n\n1. **PC1 ตรวจสอบ Subnet**: PC1 คำนวณพบว่า `192.168.1.2` อยู่ใน Subnet เดียวกัน จึงเตรียมส่งข้อมูลโดยตรง แต่ PC1 ยังไม่ทราบ MAC Address ของ PC2\n\n2. **PC1 ส่ง ARP Request**:\n\n   - PC1 สร้างแพ็กเก็ต ARP Request: *\"ใครมี IP 192.168.1.2 กรุณาบอก MAC ให้ 192.168.1.1 ทราบ\"*\n\n   - ห่อหุ้มใน Ethernet Frame: `Src MAC = MAC-A`, `Dst MAC = FF-FF-FF-FF-FF-FF` (Broadcast)\n\n3. **สวิตช์ประมวลผลเฟรม ARP Request**:\n\n   - สวิตช์รับเฟรมเข้ามาทาง **Port 1** $\\r\\to $ สวิตช์เรียนรู้ทันทีว่า **MAC-A อยู่ที่ Port 1**\n\n   - สวิตช์ตรวจสอบ Dst MAC พบว่าเป็น Broadcast (`FF-FF-FF-FF-FF-FF`) $\\r\\to $ สวิตช์ทำการ **Flooding** ส่งสำเนาเฟรมออกทาง Port 2 (และพอร์ตอื่นๆ ทั้งหมด)\n\n4. **PC2 ประมวลผลและตอบกลับ (ARP Reply)**:\n\n   - PC2 ได้รับเฟรม ตรวจสอบพบว่า Target IP ตรงกับตนเอง (`192.168.1.2`)\n\n   - PC2 บันทึก `{192.168.1.1 -> MAC-A}` ลงในตาราง ARP Cache ของตน\n\n   - PC2 สร้างแพ็กเก็ต ARP Reply: *\"ฉัน 192.168.1.2 มี MAC คือ MAC-B\"*\n\n   - ห่อหุ้มใน Ethernet Frame แบบ Unicast: `Src MAC = MAC-B`, `Dst MAC = MAC-A` ส่งออกไปที่พอร์ตของตน\n\n5. **สวิตช์ประมวลผลเฟรม ARP Reply**:\n\n   - สวิตช์รับเฟรมเข้ามาทาง **Port 2** $\\r\\to $ สวิตช์เรียนรู้ทันทีว่า **MAC-B อยู่ที่ Port 2**\n\n   - สวิตช์ตรวจสอบ Dst MAC พบว่าเป็น `MAC-A` ซึ่งมีบันทึกในตารางแล้วว่าอยู่ที่ **Port 1**\n\n   - สวิตช์ทำการ **Forwarding** ส่งเฟรมตรงออกทาง Port 1 เท่านั้น (ไม่มีการ Flooding)\n\n6. **การส่งข้อมูลจริงแบบ Unicast (Data Forwarding)**:\n\n   - PC1 ได้รับ ARP Reply และบันทึก `{192.168.1.2 -> MAC-B}` ลงใน ARP Cache\n\n   - ต่อจากนี้ ข้อมูลแอปพลิเคชันทั้งหมดระหว่าง PC1 และ PC2 จะถูกห่อหุ้มด้วย Unicast Frame และสวิตช์จะทำการ Forwarding แบบ Unicast ระหว่าง Port 1 และ Port 2 อย่างมีประสิทธิภาพสูงสุด\n\n\n\n---\n\n"
+      "content": "[PC1: 192.168.1.1 / MAC-A] <---Port 1---> [ Switch ] <---Port 2---> [PC2: 192.168.1.2 / MAC-B]"
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**PC1 ตรวจสอบ Subnet**: PC1 คำนวณพบว่า `192.168.1.2` อยู่ใน Subnet เดียวกัน จึงเตรียมส่งข้อมูลโดยตรง แต่ PC1 ยังไม่ทราบ MAC Address ของ PC2",
+        "**PC1 ส่ง ARP Request**:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "PC1 สร้างแพ็กเก็ต ARP Request: *\"ใครมี IP 192.168.1.2 กรุณาบอก MAC ให้ 192.168.1.1 ทราบ\"*",
+        "ห่อหุ้มใน Ethernet Frame: `Src MAC = MAC-A`, `Dst MAC = FF-FF-FF-FF-FF-FF` (Broadcast)"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**สวิตช์ประมวลผลเฟรม ARP Request**:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "สวิตช์รับเฟรมเข้ามาทาง **Port 1** $\to$ สวิตช์เรียนรู้ทันทีว่า **MAC-A อยู่ที่ Port 1**",
+        "สวิตช์ตรวจสอบ Dst MAC พบว่าเป็น Broadcast (`FF-FF-FF-FF-FF-FF`) $\to$ สวิตช์ทำการ **Flooding** ส่งสำเนาเฟรมออกทาง Port 2 (และพอร์ตอื่นๆ ทั้งหมด)"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**PC2 ประมวลผลและตอบกลับ (ARP Reply)**:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "PC2 ได้รับเฟรม ตรวจสอบพบว่า Target IP ตรงกับตนเอง (`192.168.1.2`)",
+        "PC2 บันทึก `{192.168.1.1 -> MAC-A}` ลงในตาราง ARP Cache ของตน",
+        "PC2 สร้างแพ็กเก็ต ARP Reply: *\"ฉัน 192.168.1.2 มี MAC คือ MAC-B\"*",
+        "ห่อหุ้มใน Ethernet Frame แบบ Unicast: `Src MAC = MAC-B`, `Dst MAC = MAC-A` ส่งออกไปที่พอร์ตของตน"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**สวิตช์ประมวลผลเฟรม ARP Reply**:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "สวิตช์รับเฟรมเข้ามาทาง **Port 2** $\to$ สวิตช์เรียนรู้ทันทีว่า **MAC-B อยู่ที่ Port 2**",
+        "สวิตช์ตรวจสอบ Dst MAC พบว่าเป็น `MAC-A` ซึ่งมีบันทึกในตารางแล้วว่าอยู่ที่ **Port 1**",
+        "สวิตช์ทำการ **Forwarding** ส่งเฟรมตรงออกทาง Port 1 เท่านั้น (ไม่มีการ Flooding)"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": true,
+      "items": [
+        "**การส่งข้อมูลจริงแบบ Unicast (Data Forwarding)**:"
+      ]
+    },
+    {
+      "type": "list",
+      "ordered": false,
+      "items": [
+        "PC1 ได้รับ ARP Reply และบันทึก `{192.168.1.2 -> MAC-B}` ลงใน ARP Cache",
+        "ต่อจากนี้ ข้อมูลแอปพลิเคชันทั้งหมดระหว่าง PC1 และ PC2 จะถูกห่อหุ้มด้วย Unicast Frame และสวิตช์จะทำการ Forwarding แบบ Unicast ระหว่าง Port 1 และ Port 2 อย่างมีประสิทธิภาพสูงสุด"
+      ]
     }
   ],
   "5": [
